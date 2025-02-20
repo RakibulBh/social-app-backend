@@ -157,8 +157,8 @@ func (app *application) postsContextMiddleware(next http.Handler) http.Handler {
 
 		post, err := app.store.Posts.GetByID(ctx, id)
 		if err != nil {
-			switch {
-			case errors.Is(err, store.ErrNotFound):
+			switch err {
+			case store.ErrNotFound:
 				app.notFoundError(w, r, err)
 			default:
 				app.internalServerError(w, r, err)
