@@ -37,7 +37,7 @@ func (s *PostStore) Create(ctx context.Context, post *Post) error {
 	`
 
 	// Add a timeout to the query
-	ctx, cancel := context.WithTimeout(ctx, QueryTimeDuration)
+	ctx, cancel := context.WithTimeout(ctx, QueryTimeoutDuration)
 	defer cancel()
 
 	err := s.db.QueryRowContext(ctx, query, post.Content, post.Title, post.UserID, pq.Array(post.Tags)).Scan(
@@ -61,7 +61,7 @@ func (s *PostStore) GetByID(ctx context.Context, id int64) (*Post, error) {
 	`
 
 	// Add a timeout to the query
-	ctx, cancel := context.WithTimeout(ctx, QueryTimeDuration)
+	ctx, cancel := context.WithTimeout(ctx, QueryTimeoutDuration)
 	defer cancel()
 
 	// fetch the post
@@ -86,7 +86,7 @@ func (s *PostStore) Delete(ctx context.Context, id int64) error {
 	WHERE id = $1
 	`
 	// Add a timeout to the query
-	ctx, cancel := context.WithTimeout(ctx, QueryTimeDuration)
+	ctx, cancel := context.WithTimeout(ctx, QueryTimeoutDuration)
 	defer cancel()
 
 	res, err := s.db.ExecContext(ctx, query, id)
@@ -115,7 +115,7 @@ func (s *PostStore) Update(ctx context.Context, post *Post) error {
 	`
 
 	// Add a timeout to the query
-	ctx, cancel := context.WithTimeout(ctx, QueryTimeDuration)
+	ctx, cancel := context.WithTimeout(ctx, QueryTimeoutDuration)
 	defer cancel()
 
 	err := s.db.QueryRowContext(ctx, query, post.Title, post.Content, post.ID, post.Version).Scan(&post.Version)
@@ -150,7 +150,7 @@ func (s *PostStore) GetUserFeed(ctx context.Context, userID int64, fq PaginatedF
 	`
 
 	// Add a timeout to the query
-	ctx, cancel := context.WithTimeout(ctx, QueryTimeDuration)
+	ctx, cancel := context.WithTimeout(ctx, QueryTimeoutDuration)
 	defer cancel()
 
 	rows, err := s.db.QueryContext(ctx, query, userID, fq.Limit, fq.Offset, fq.Search, pq.Array(fq.Tags))

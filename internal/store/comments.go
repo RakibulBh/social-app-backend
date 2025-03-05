@@ -27,7 +27,7 @@ func (s *CommentStore) GetPostByID(ctx context.Context, postID int64) ([]Comment
 	`
 
 	// Add a timeout to the query
-	ctx, cancel := context.WithTimeout(ctx, QueryTimeDuration)
+	ctx, cancel := context.WithTimeout(ctx, QueryTimeoutDuration)
 	defer cancel()
 
 	rows, err := s.db.QueryContext(ctx, query, postID)
@@ -57,7 +57,7 @@ func (s *CommentStore) Create(ctx context.Context, comment *Comment) error {
 		RETURNING id, created_at
 	`
 
-	ctx, cancel := context.WithTimeout(ctx, QueryTimeDuration)
+	ctx, cancel := context.WithTimeout(ctx, QueryTimeoutDuration)
 	defer cancel()
 
 	err := s.db.QueryRowContext(

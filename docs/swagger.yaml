@@ -16,6 +16,23 @@ definitions:
     - content
     - title
     type: object
+  main.RegisterUserPayload:
+    properties:
+      email:
+        maxLength: 255
+        type: string
+      password:
+        maxLength: 72
+        minLength: 3
+        type: string
+      username:
+        maxLength: 100
+        type: string
+    required:
+    - email
+    - password
+    - username
+    type: object
   store.Comment:
     properties:
       content:
@@ -110,6 +127,28 @@ info:
   termsOfService: http://swagger.io/terms/
   title: Rakibul's Social App
 paths:
+  /authentication/user:
+    post:
+      consumes:
+      - application/json
+      description: Register a user
+      parameters:
+      - description: User credentials
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/main.RegisterUserPayload'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: User registered
+          schema:
+            $ref: '#/definitions/store.User'
+      summary: Register a user
+      tags:
+      - authentication
   /health:
     get:
       description: Healthcheck endpoint
